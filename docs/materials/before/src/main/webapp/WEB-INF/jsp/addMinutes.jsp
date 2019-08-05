@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+    pageEncoding="ISO-8859-1"%>    
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>    
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +31,30 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
-    <style>
+    
+	<script type="text/javascript" src="jquery-1.8.3.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(
+			function() {
+				$.getJSON('<spring:url value="activities.json"/>', {
+					ajax : 'true'
+				}, function(data){
+					var html = '<option value="">--Please select one--</option>';
+					var len = data.length;
+					for (var i = 0; i < len; i++) {
+						html += '<option value="' + data[i].desc + '">'
+								+ data[i].desc + '</option>';
+					}
+					html += '</option>';
+					
+					$('#activities').html(html);
+				});
+				
+			});
+		
+	</script>
+	<style>
 		.error {
 			color: #ff0000;
 		}
@@ -47,7 +73,7 @@
       <div class="navbar-inner">
         <div class="container">
           <a class="brand" href="#">
-            Add Goal
+            <spring:message code="minutes.exercised"/>
           </a>
           <ul class="nav">
           </ul>
@@ -57,33 +83,64 @@
     <div class="container">
       <div>
         <h1>
-          Add Goal
+          <spring:message code="minutes.exercised"/>
         </h1>
-        <p>
-          Add your workout goal in minutes for the day.
-          <br>
-          &nbsp;
-        </p>
       </div>
+      <a class="btn" href="?language=en">
+        English
+      </a>
+      <a class="btn" href="?language=es">
+        Spanish
+      </a>
+      <br/>
+      <br/>
+      <form:form commandName="exercise">
+      	<form:errors path="*" cssClass="errorblock" element="div" />
+      	<div class="control-group">
+          <label for="textinput1">
+            <spring:message code="minutes.text"/>
+          </label>
+          <form:input path="minutes"/>
+          <form:errors path="minutes" cssClass="error" />
+        </div>
+        
+        <div class="control-group">
+          <label for="selectinput1">
+            <spring:message code="minutes.activity" />
+          </label>
+          <form:select id="activities" path="activity" />
+        </div>
+		
+		<input type="submit" class="btn" value="<spring:message code="minutes.button.enter"/>"/>
+		
+	</form:form>
       
-      <form:form commandName="goal">
-		<form:errors path="*" cssClass="errorblock" element="div" />
-			<label for="textinput1">
-	          Enter Minutes:
-	        </label>	
-			<form:input path="minutes" cssErrorClass="error" />
-			<form:errors path="minutes" cssClass="error" />
-			<br/>
-			<input type="submit" class="btn" value="Enter Goal Minutes"/>
-	  </form:form>
-     
-      <div class="control-group">
-      </div>
+      <span class="label">
+        <spring:message code="minutes.goal"/> ${goal.minutes}
+      </span>
     </div>
 
-     <script src="jquery-1.8.3.js">
-    </script>
     <script src="assets/js/bootstrap.js">
     </script>
   </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
